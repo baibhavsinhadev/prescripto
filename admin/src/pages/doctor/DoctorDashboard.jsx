@@ -5,6 +5,7 @@ import { useDoctorContext } from "../../context/DoctorContext";
 import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
 import Loading from "../../components/Loading";
+import DashboardSkeleton from "../../components/DashboardSkeleton";
 
 const DoctorDashboard = () => {
 
@@ -66,8 +67,8 @@ const DoctorDashboard = () => {
         };
     }, [isDoctor]);
 
-    if (loading) {
-        return <Loading />
+    if (loading && !dashboardData) {
+        return <DashboardSkeleton />;
     }
 
     return dashboardData && (

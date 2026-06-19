@@ -4,7 +4,7 @@ import { useAdminContext } from "../../context/AdminContext";
 import api from "../../api/axios";
 import { useEffect } from "react";
 import { assets } from "../../assets/assets";
-import Loading from "../../components/Loading";
+import DashboardSkeleton from "../../components/DashboardSkeleton";
 
 const Dashboard = () => {
 
@@ -65,10 +65,8 @@ const Dashboard = () => {
         }
     }, [isAdmin]);
 
-    if (loading) {
-        return (
-            <Loading />
-        );
+    if (loading && !dashboardData) {
+        return <DashboardSkeleton />;
     }
 
     return (
