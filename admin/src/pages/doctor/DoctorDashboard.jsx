@@ -4,15 +4,19 @@ import { toast } from "react-toastify";
 import { useDoctorContext } from "../../context/DoctorContext";
 import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
+import Loading from "../../components/Loading";
 
 const DoctorDashboard = () => {
 
     const { isDoctor } = useDoctorContext();
     const { currency } = useAppContext();
+
     const [dashboardData, setDashboardData] = useState([]);
+    const [loading, setLoading] = useState(false)
 
     const fetchDashboardData = async () => {
         try {
+            setLoading(true);
             const { data } = await api.get("/doctor/dashboard");
 
             if (data.success) {
@@ -20,7 +24,9 @@ const DoctorDashboard = () => {
             };
         } catch (error) {
             toast.error(error?.response?.data?.message)
-        }
+        } finally {
+            setLoading(false);
+        };
     };
 
     const cancelAppointment = async (appointmentId) => {
@@ -58,7 +64,11 @@ const DoctorDashboard = () => {
         if (isDoctor) {
             fetchDashboardData();
         };
-    }, [isDoctor])
+    }, [isDoctor]);
+
+    if (loading) {
+        return <Loading />
+    }
 
     return dashboardData && (
         <div className="m-5">
@@ -104,8 +114,8 @@ const DoctorDashboard = () => {
                                 ) : appointment.isCompleted ? (
                                     <p className="text-green-400 text-xs font-medium">Completed</p>
                                 ) : (
-                                <img onClick={() => cancelAppointment(appointment._id)} src={assets.cancel_icon} alt="Cancel" className="w-10 cursor-pointer" />
-                                    )}
+                                    <img onClick={() => cancelAppointment(appointment._id)} src={assets.cancel_icon} alt="Cancel" className="w-10 cursor-pointer" />
+                                )}
                             </div>
                         )
                     })) : (

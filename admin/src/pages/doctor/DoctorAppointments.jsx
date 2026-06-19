@@ -5,15 +5,19 @@ import { useEffect } from "react";
 import { useAppContext } from "../../context/AppContext";
 import { assets } from "../../assets/assets";
 import api from "../../api/axios";
+import Loading from "../../components/Loading";
 
 const DoctorAppointments = () => {
 
     const { isDoctor } = useDoctorContext();
     const { currency } = useAppContext();
+
     const [appointments, setAppointments] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const fetchAppointments = async () => {
         try {
+            setLoading(true);
             const { data } = await api.get("/doctor/appointments");
 
             if (data.success) {
@@ -21,6 +25,8 @@ const DoctorAppointments = () => {
             }
         } catch (error) {
             toast.error(error?.response?.data?.message);
+        } finally {
+            setLoading(false);
         };
     };
 
@@ -68,7 +74,11 @@ const DoctorAppointments = () => {
         if (isDoctor) {
             fetchAppointments();
         }
-    }, [isDoctor])
+    }, [isDoctor]);
+
+    if (loading) {
+        return <Loading />
+    };
 
     return (
         <div className="w-full max-w-6xl m-5">

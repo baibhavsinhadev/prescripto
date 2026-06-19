@@ -4,14 +4,18 @@ import { useAdminContext } from "../../context/AdminContext";
 import api from "../../api/axios";
 import { useEffect } from "react";
 import { assets } from "../../assets/assets";
+import Loading from "../../components/Loading";
 
 const Dashboard = () => {
 
     const { isAdmin } = useAdminContext();
+
     const [dashboardData, setDashboardData] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const fetchDashboardData = async () => {
         try {
+            setLoading(true);
             const { data } = await api.get("/admin/dashboard");
 
             if (data.success) {
@@ -19,7 +23,9 @@ const Dashboard = () => {
             };
         } catch (error) {
             toast.error(error?.response?.data?.message);
-        }
+        } finally {
+            setLoading(false);
+        };
     };
 
     const dashStats = [
@@ -57,7 +63,13 @@ const Dashboard = () => {
         if (isAdmin) {
             fetchDashboardData();
         }
-    }, [isAdmin])
+    }, [isAdmin]);
+
+    if (loading) {
+        return (
+            <Loading />
+        );
+    }
 
     return (
         <div className="m-5">

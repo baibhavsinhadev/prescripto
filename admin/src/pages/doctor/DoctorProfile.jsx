@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useAppContext } from "../../context/AppContext";
 import { ArrowRightIcon, Edit } from "lucide-react"
 import api from "../../api/axios";
+import Loading from "../../components/Loading";
 
 const PasswordModal = ({ setShowPasswordModal }) => {
 
@@ -101,6 +102,8 @@ const DoctorProfile = () => {
     const [profile, setProfile] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [loading, setLoading] = useState(false);
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -134,6 +137,7 @@ const DoctorProfile = () => {
 
     const fetchProfileData = async () => {
         try {
+            setLoading(false);
             const { data } = await api.get("/doctor/profile");
 
             if (data.success) {
@@ -141,6 +145,8 @@ const DoctorProfile = () => {
             };
         } catch (error) {
             toast.error(error?.response?.data?.message)
+        } finally {
+            setLoading(true);
         }
     };
 
@@ -171,6 +177,7 @@ const DoctorProfile = () => {
         }
     }, [isDoctor]);
 
+    if (loading) return <Loading />;
     if (!profile) return null;
 
     return profile && (
