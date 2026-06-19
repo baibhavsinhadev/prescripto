@@ -8,9 +8,12 @@ const DoctorContext = createContext();
 export const DoctorProvider = ({ children }) => {
 
     const [isDoctor, setIsDoctor] = useState(false);
+    const [doctorLoading, setDoctorLoading] = useState(false);
 
     // Fetch Is Doctor
     const fetchIsDoctor = async () => {
+        setDoctorLoading(true)
+
         try {
             const { data } = await api.get("/doctor/check-doctor-auth");
 
@@ -21,6 +24,8 @@ export const DoctorProvider = ({ children }) => {
             }
         } catch (error) {
             setIsDoctor(false)
+        } finally {
+            setDoctorLoading(false);
         };
     };
 

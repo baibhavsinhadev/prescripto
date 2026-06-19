@@ -7,10 +7,13 @@ const AdminContext = createContext();
 export const AdminProvider = ({ children }) => {
 
     const [isAdmin, setIsAdmin] = useState(false);
+    const [adminLoading, setAdminLoading] = useState(false);
     const [doctors, setDoctors] = useState([]);
 
     // Fetch Is Admin
     const fetchIsAdmin = async () => {
+        setAdminLoading(true);
+
         try {
             const { data } = await api.get("/admin/check-admin-auth");
 
@@ -21,6 +24,8 @@ export const AdminProvider = ({ children }) => {
             }
         } catch (error) {
             setIsAdmin(false)
+        } finally {
+            setAdminLoading(false);
         };
     };
 
@@ -51,7 +56,7 @@ export const AdminProvider = ({ children }) => {
 
     const value = {
         isAdmin, setIsAdmin, doctors, setDoctors,
-        fetchAllDoctors
+        fetchAllDoctors, adminLoading
     };
 
     return (

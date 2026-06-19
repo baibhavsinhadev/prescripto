@@ -12,11 +12,18 @@ import Doctors from "./pages/admin/Doctors";
 import DoctorDashboard from "./pages/doctor/DoctorDashboard";
 import DoctorProfile from "./pages/doctor/DoctorProfile";
 import DoctorAppointments from "./pages/doctor/DoctorAppointments";
+import Loading from "./components/Loading";
 
 const App = () => {
 
-    const { isAdmin } = useAdminContext();
-    const { isDoctor } = useDoctorContext();
+    const { isAdmin, adminLoading } = useAdminContext();
+    const { isDoctor, doctorLoading } = useDoctorContext();
+
+    if (adminLoading || doctorLoading) {
+        return (
+            <Loading />
+        );
+    };
 
     return isAdmin || isDoctor ? (
         isAdmin ? (
