@@ -171,32 +171,23 @@ export const stripeWebhooks = async (req, res) => {
         console.error(err);
         return res.status(400).send(`Webhook Error: ${err.message}`);
     };
+    
+    switch (event.type) {
+        case "checkout.session.completed": {
+            const session = event.data.object;
+            const appointmentId = session.metadata.appointmentId;
 
-    try {
-        switch (event.type) {
-            case "checkout.session.completed": {
-                const session = event.data.object;
-                const appointmentId = session.metadata.appointmentId;
+            await Appointment.findByIdAndUpdate(appointmentId, {
+                payment: true,
+                paymentMethod: "Stripe"
+            });
+            break;
+        }
 
-                await Appointment.findByIdAndUpdate(appointmentId, {
-                    payment: true,
-                    paymentMethod: "Stripe"
-                });
-                break;
-            }
+        default:
+            console.log(`Unhandled event type ${event.type}`);
+            break;
+    };
 
-            default:
-                console.log(`Unhandled event type ${event.type}`);
-                break;
-        };
-
-        return res.json({ received: true });
-    } catch (error) {
-        console.error(error);
-
-        return res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-        });
-    }
+    return res.json({ received: true });
 };
