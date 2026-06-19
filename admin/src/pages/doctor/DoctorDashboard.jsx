@@ -114,6 +114,8 @@ const DoctorDashboard = () => {
                                     <p className="text-red-400 text-xs font-medium">Cancelled</p>
                                 ) : appointment.isCompleted ? (
                                     <p className="text-green-400 text-xs font-medium">Completed</p>
+                                ) : appointment.payment ? (
+                                    <p className="text-green-400 text-xs font-medium">Paid</p>
                                 ) : (
                                     <img onClick={() => cancelAppointment(appointment._id)} src={assets.cancel_icon} alt="Cancel" className="w-10 cursor-pointer" />
                                 )}

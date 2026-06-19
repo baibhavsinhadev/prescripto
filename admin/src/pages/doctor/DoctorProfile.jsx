@@ -137,7 +137,7 @@ const DoctorProfile = () => {
 
     const fetchProfileData = async () => {
         try {
-            setLoading(false);
+            setLoading(true);
             const { data } = await api.get("/doctor/profile");
 
             if (data.success) {
@@ -146,7 +146,7 @@ const DoctorProfile = () => {
         } catch (error) {
             toast.error(error?.response?.data?.message)
         } finally {
-            setLoading(true);
+            setLoading(false);
         }
     };
 

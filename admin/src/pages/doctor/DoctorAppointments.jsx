@@ -133,6 +133,8 @@ const DoctorAppointments = () => {
                                     <p className="text-green-500 text-xs font-medium">
                                         Completed
                                     </p>
+                                ) : appointment.payment ? (
+                                    <p className="text-green-400 text-xs font-medium">Paid</p>
                                 ) : (
                                     <div className="flex">
                                         <img
