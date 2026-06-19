@@ -59,7 +59,11 @@ export const adminLogin = async (req, res) => {
 // API for admin logout : POST /api/admin/logout
 export const adminLogout = async (req, res) => {
     try {
-        res.clearCookie("adminToken");
+        res.clearCookie("adminToken", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
+        });
 
         return res.status(200).json({
             success: true,

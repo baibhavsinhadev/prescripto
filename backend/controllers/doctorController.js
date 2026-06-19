@@ -65,7 +65,11 @@ export const doctorLogin = async (req, res) => {
 // API for doctor logout : POST /api/doctor/logout
 export const doctorLogout = async (req, res) => {
     try {
-        res.clearCookie("doctorToken");
+        res.clearCookie("doctorToken", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict"
+        });
 
         return res.status(200).json({
             success: true,
